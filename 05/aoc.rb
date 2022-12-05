@@ -52,6 +52,7 @@ end
 
 class CrateStack9001 < CrateStack
 
+    # in part 2 of exercise, the 
     # new create mover preserves order when moving crates
     def move!(count, from, to)                  
         val = stacks[from].pop(count)
@@ -62,14 +63,18 @@ end
 
 
 content = File.read("input.txt")
+# read the stack and the moves into separate vars
 stack_text, moves = content.split("\n\n")
+
+# we want to start building our crate stack from the bottom
 stack_input = stack_text.split("\n").reverse
 
 # Use CrateStack for part 1, CreateStack9001 for part 2
+# Use the stack number row to get the number of stacks and then discard it
 stack = CrateStack9001.new(stack_input.shift.split.last.to_i)
 
 stack_input.each do |row|    
-    #TODO this won't work        
+    # can't split because not every stack will have a crate at a given level        
     row.scan(/.{1,4}/).each_with_index do |slice, index|                        
         letter = slice.scan(/\w/).first
         unless letter.nil?            
