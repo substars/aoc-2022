@@ -95,13 +95,3 @@ puts stack.to_s
 
 puts "top of each stack:"
 puts stack.top_of_each_stack
-
-
-
-
-
-
-
-
-
-
