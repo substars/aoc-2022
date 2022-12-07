@@ -26,3 +26,12 @@ puts
 lines.each do |line|
     puts "line #{line} has SoM # #{get_start_of_seq(line, 14)}"
 end
+
+puts
+puts "PART 1 (gross one-liner version)"
+puts
+
+# bonus hideous one-liner solution
+lines.each do |line|
+    puts "line #{line} has SoP # #{line.index(line.chars.each_cons(4).detect{|subset| !subset.uniq!}.join) + 4}"    
+end
