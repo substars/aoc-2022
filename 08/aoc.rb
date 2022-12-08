@@ -13,12 +13,7 @@ class TreeGrid
 
     def visible?(x, y)
         return true if [x,y].include?(0) || x==height-1 || y==width-1
-        [
-            trees[x].first(y),
-            trees[x].last(width-y-1),
-            (x-1).downto(0).map{|col| trees[col][y] },
-            (x+1).upto(height-1).map{|col| trees[col][y] }
-    ].map(&:max).any?{|max| max < trees[x][y]}
+        trees_in_every_direction(x,y).map(&:max).any?{|max| max < trees[x][y]}
     
     end
     
@@ -32,12 +27,7 @@ class TreeGrid
 
     def scenic_score(x,y)        
         th = trees[x][y]                
-        zz = [
-        trees[x].first(y).reverse, # left
-        trees[x].last(width-y-1), # right
-        (x-1).downto(0).map{|col| trees[col][y] }, # down
-        (x+1).upto(height-1).map{|col| trees[col][y] } # up
-        ].map do |list|
+        trees_in_every_direction(x,y).map do |list|
             index = list.index{|oth| oth >= th }
             case 
             when list.empty?
@@ -49,7 +39,7 @@ class TreeGrid
             end 
         end.inject(&:*)
     end
-
+    
     def to_s
         height.times.map do |x|
             width.times.map do |y|
@@ -59,12 +49,25 @@ class TreeGrid
         end 
         print "\n"
     end
+
+    private
+    
+    def trees_in_every_direction(x,y)
+        [
+            trees[x].first(y).reverse, # trees to the left (from view of x,y, i.e. reversed)
+            trees[x].last(width-y-1), # to the right
+            (x-1).downto(0).map{|col| trees[col][y] }, # up (from view of x,y, i.e. reversed)
+            (x+1).upto(height-1).map{|col| trees[col][y] } # down 
+        ]
+    end
 end
 
 lines = File.read('input.txt').split("\n")
 
 trees = TreeGrid.new(lines.length, lines.first.length)
 
+puts "Parsed tree:"
+puts trees.to_s
 
 lines.each_with_index do |line, x|    
     line.chars.each_with_index do |height, y|
@@ -72,28 +75,23 @@ lines.each_with_index do |line, x|
     end    
 end
 
-puts trees.to_s
 puts
+puts "*** PART 1: # visible trees ***"
+puts
+
 puts trees.visible_count
 
 puts
-puts "*** PART 2 ***"
+puts "*** PART 2: highest scenic score ***"
 puts
 
 
-max = 0
-trees.height.times.map do |x|
+puts "max scenic score: " + (trees.height.times.map do |x|
     trees.width.times.map do |y|
-        ss = trees.scenic_score(x,y)
-        max=ss if ss>max        
+        trees.scenic_score(x,y)        
     end    
-end
-puts
-puts max
+end.flatten.max.to_s)
 
-
-#  puts trees.trees[3][4]
-#   puts trees.scenic_score(3,4)
 
 
 
