@@ -36,6 +36,8 @@ class RopeGrid
       visit! if visit
     end
 
+    alias :d! :down!
+
     # want to move diagonally? use this
     def batch_move
       yield self
@@ -53,8 +55,6 @@ class RopeGrid
     def visit!
       visited << [x, y]
     end
-
-    alias :d! :down!
   end
 
   attr_accessor :head, :followers
