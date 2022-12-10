@@ -58,7 +58,7 @@ c = CPU.new
 File.read("input.txt").split("\n").each do |line|
   instruction, val = line.split(" ")
   c.send(instruction, val.to_i) do |x, cycle|
-    if [40, 80, 120, 160, 200, 240].include?(cycle)
+    if cycle%40 == 0
       puts c.draw!
     end    
   end
