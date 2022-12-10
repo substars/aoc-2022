@@ -1,11 +1,10 @@
-cycle = 1
-
 class CPU
-  attr_accessor :x, :cycle
+  attr_accessor :x, :cycle, :buffer
 
   def initialize
     self.x = 1
     self.cycle = 0
+    self.buffer = ""
   end
 
   def noop(_)
@@ -22,8 +21,18 @@ class CPU
   end
 
   def cycle!
+    self.buffer << if [x - 1, x, x + 1].include?(cycle % 40)
+      "#"
+    else
+      "."
+    end
     self.cycle += 1
-    #puts "CPU\tcycle: #{cycle}\tx: #{x}"
+  end
+
+  def draw!
+    retval = self.buffer
+    self.buffer = ""
+    return retval
   end
 end
 
@@ -33,10 +42,24 @@ File.read("input.txt").split("\n").each do |line|
   instruction, val = line.split(" ")
   c.send(instruction, val.to_i) do |x, cycle|
     if [20, 60, 100, 140, 180, 220].include?(cycle)
-      puts "signal strength at #{cycle} is #{cycle * x} (#{x})"
+      #puts "signal strength at #{cycle} is #{cycle * x} (#{x})"
       signal_strengths_total += (cycle * x)
     end
   end
 end
 
 puts "part 1: #{signal_strengths_total}"
+
+puts "part 2:"
+puts
+
+c = CPU.new
+
+File.read("input.txt").split("\n").each do |line|
+  instruction, val = line.split(" ")
+  c.send(instruction, val.to_i) do |x, cycle|
+    if [40, 80, 120, 160, 200, 240].include?(cycle)
+      puts c.draw!
+    end    
+  end
+end
