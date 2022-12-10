@@ -37,21 +37,12 @@ class CPU
   end
 end
 
-c = CPU.new
-signal_strengths_total = 0
-File.read("input.txt").split("\n").each do |line|
-  c.send(*line.split(" ")) do |cpu|
-    signal_strengths_total += cpu.signal_strength
+strengths_sum = File.read("input.txt").split("\n").inject({cpu: CPU.new, strengths: 0}) do |hsh, line|
+  hsh[:cpu].send(*line.split(" ")) do |cpu|
+    hsh[:strengths] += cpu.signal_strength
   end
-end
+  hsh
+end[:strengths]
 
-puts "part 1: #{signal_strengths_total}"
-
-puts "part 2:"
 puts
-
-c = CPU.new
-
-File.read("input.txt").split("\n").each do |line|
-  c.send(*line.split(" "))
-end
+puts "part 1 answer: #{strengths_sum}"
