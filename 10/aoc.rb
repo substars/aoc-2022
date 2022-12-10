@@ -21,7 +21,7 @@ class CPU
   end
 
   def cycle!
-    self.buffer << if [x - 1, x, x + 1].include?(cycle % 40)
+    self.buffer << if ((x - 1)..(x + 1)).include?(cycle % 40)
       "#"
     else
       "."
@@ -58,8 +58,8 @@ c = CPU.new
 File.read("input.txt").split("\n").each do |line|
   instruction, val = line.split(" ")
   c.send(instruction, val.to_i) do |x, cycle|
-    if cycle%40 == 0
+    if cycle % 40 == 0
       puts c.draw!
-    end    
+    end
   end
 end
